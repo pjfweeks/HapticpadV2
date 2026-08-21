@@ -1,7 +1,7 @@
 # Starter SD card
 
 Copy everything in this folder onto a freshly FAT32-formatted microSD, insert
-it, and the pad boots with two working profiles.
+it, and the pad boots with a working example profile.
 
 ```
 config.txt              device settings      -> ../docs/configuration.md
