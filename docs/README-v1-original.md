@@ -1,5 +1,5 @@
 # CNCDan - Haptic Pad
-![Alt text](images/title.png "Haptic Pad")
+![HapticPad](images/hero.jpg "Haptic Pad")
 
 A 6 button macropad with a display for button labels and a mouse knob with haptic feedback!
 
