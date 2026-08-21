@@ -1,6 +1,6 @@
 # HapticPad v2
 
-![HapticPad](docs/images/title.png)
+![HapticPad](docs/images/hero.jpg)
 
 A six-key macropad with an OLED label screen and a brushless wheel that
 generates its detents in software — the clicks you feel are torque curves, not

@@ -1,5 +1,5 @@
 # CNCDan - Haptic Pad
-![Alt text](title.png "Haptic Pad")
+![Alt text](images/title.png "Haptic Pad")
 
 A 6 button macropad with a display for button labels and a mouse knob with haptic feedback!
 
@@ -70,7 +70,7 @@ Get all of the .STEP files in the 3D Files/STEP folder machined. Don't include t
 
 I made this quick picture to show how the wheel motor gets assembled:
 
-![Alt text](MotorStack.png "Motor Assembly")
+![Alt text](images/MotorStack.png "Motor Assembly")
 
 The "Encoder Mount.STL" part has two small holes in it that are supposed to get tapped to M2 for the encoder. If you don't have an M2 tap, you can probably just glue the encoder to the mount or even use some small self tapping screws to hold it in place.
 
