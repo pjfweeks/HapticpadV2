@@ -1,34 +1,41 @@
+# Excel
+# Profile format: ../../docs/profile-format.md
+
 name=Excel
-color=0x00FF00
+
+# LED ring - anything omitted follows the device setting in /config.txt
+led_primary=#00FF00
+
+# wheel: off free clicky ratchet damped 4points
 wheel=4points
 wheel_func=scroll_h
 
-# CTRL+S : Salva
+# button 1 - SHIFT+F12: salva
 btn1_label=Salva
-btn1_action=SHIFT+F12,10
 btn1_icon=save.bin
+btn1_action=SHIFT+F12,10
 
-# CTRL+N : Nuovo
+# button 2 - CTRL+N: nuova cartella di lavoro
 btn2_label=Nuovo
-btn2_action=CTRL+N,10
 btn2_icon=plus.bin
+btn2_action=CTRL+N,10
 
-# CTRL+Z : Annulla
+# button 3 - CTRL+Z: annulla
 btn3_label=Annulla
-btn3_action=CTRL+Z,10
 btn3_icon=arrow-left.bin
+btn3_action=CTRL+Z,10
 
-# CTRL+SHIFT+T : Cerca
+# button 4 - CTRL+SHIFT+T: cerca
 btn4_label=Cerca
-btn4_action=CTRL+SHIFT+T,10
 btn4_icon=search.bin
+btn4_action=CTRL+SHIFT+T,10
 
-# CTRL+X : Taglia
+# button 5 - CTRL+X: taglia
 btn5_label=Taglia
-btn5_action=CTRL+X,10
 btn5_icon=cut.bin
+btn5_action=CTRL+X,10
 
-# CTRL+SHIFT+L : Filtri
+# button 6 - CTRL+SHIFT+L: filtri
 btn6_label=Filtri
-btn6_action=CTRL+SHIFT+L,10
 btn6_icon=filter.bin
+btn6_action=CTRL+SHIFT+L,10
