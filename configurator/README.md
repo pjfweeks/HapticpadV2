@@ -1,5 +1,7 @@
 # HapticPad Configurator
 
+![HapticPad Configurator](../docs/images/configurator.png)
+
 Configures everything on the pad — profiles, macros, icons, LED and wheel
 settings — over the USB cable. The SD card stays in the device; the firmware
 does the reading and writing on its behalf.
