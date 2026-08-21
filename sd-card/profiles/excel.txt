@@ -1,0 +1,34 @@
+name=Excel
+color=0x00FF00
+wheel=4points
+wheel_func=scroll_h
+
+# CTRL+S : Salva
+btn1_label=Salva
+btn1_action=SHIFT+F12,10
+btn1_icon=save.bin
+
+# CTRL+N : Nuovo
+btn2_label=Nuovo
+btn2_action=CTRL+N,10
+btn2_icon=plus.bin
+
+# CTRL+Z : Annulla
+btn3_label=Annulla
+btn3_action=CTRL+Z,10
+btn3_icon=arrow-left.bin
+
+# CTRL+SHIFT+T : Cerca
+btn4_label=Cerca
+btn4_action=CTRL+SHIFT+T,10
+btn4_icon=search.bin
+
+# CTRL+X : Taglia
+btn5_label=Taglia
+btn5_action=CTRL+X,10
+btn5_icon=cut.bin
+
+# CTRL+SHIFT+L : Filtri
+btn6_label=Filtri
+btn6_action=CTRL+SHIFT+L,10
+btn6_icon=filter.bin

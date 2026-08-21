@@ -1,0 +1,23 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            // Requires a Raspberry Pi Debug Probe (or a second Pico running
+            // picoprobe) wired to SWCLK/SWDIO/GND, plus openocd.  Without one,
+            // flash by dragging build/hapticpad.uf2 onto the RPI-RP2 drive and
+            // read the log over the pad's own USB serial port instead.
+            "name": "Debug over SWD (Debug Probe)",
+            "type": "cortex-debug",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "executable": "${workspaceFolder}/build/hapticpad.elf",
+            "servertype": "openocd",
+            "gdbPath": "${env:HOME}/pico/arm-gnu-toolchain-14.2.rel1-darwin-arm64-arm-none-eabi/bin/arm-none-eabi-gdb",
+            "device": "RP2040",
+            "configFiles": ["interface/cmsis-dap.cfg", "target/rp2040.cfg"],
+            "openOCDLaunchCommands": ["adapter speed 5000"],
+            "svdFile": "${env:HOME}/pico/pico-sdk/src/rp2040/hardware_regs/RP2040.svd",
+            "runToEntryPoint": "main"
+        }
+    ]
+}

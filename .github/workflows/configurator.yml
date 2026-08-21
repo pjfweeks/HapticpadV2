@@ -1,0 +1,23 @@
+name: configurator
+
+on:
+  push:
+    paths: ['configurator/**', 'sd-card/**', 'assets/**', '.github/workflows/configurator.yml']
+  pull_request:
+    paths: ['configurator/**', 'sd-card/**', 'assets/**']
+
+jobs:
+  selftest:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.9', '3.12']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      # No dependencies on purpose: the app must run on a stock Python.
+      - name: Self-test
+        run: python3 selftest.py
+        working-directory: configurator

@@ -1,0 +1,45 @@
+; disp_spi.pio - transmit-only SPI master for the SSD1309 display.
+;
+; GP28 (clock) and GP22 (data) are not a legal hardware-SPI pin pair on the
+; RP2040, which forced the Arduino firmware into U8g2's software SPI: roughly
+; 30 ms of bit-banging per full frame, on the same core as the button scan.
+; PIO drives the identical pins at 8 MHz and, fed by DMA, costs the CPU
+; nothing beyond kicking off the transfer (~1 ms per frame, in background).
+;
+; Mode 0: data changes on the falling edge, sampled on the rising edge.
+
+.program disp_spi
+.side_set 1
+
+.wrap_target
+    out pins, 1   side 0      ; present bit, clock low
+    nop           side 1      ; clock high - display samples here
+.wrap
+
+% c-sdk {
+#include "hardware/clocks.h"
+
+static inline void disp_spi_program_init(PIO pio, uint sm, uint offset,
+                                         uint pin_mosi, uint pin_sck,
+                                         float freq_hz) {
+    pio_gpio_init(pio, pin_mosi);
+    pio_gpio_init(pio, pin_sck);
+    pio_sm_set_consecutive_pindirs(pio, sm, pin_mosi, 1, true);
+    pio_sm_set_consecutive_pindirs(pio, sm, pin_sck, 1, true);
+
+    pio_sm_config c = disp_spi_program_get_default_config(offset);
+    sm_config_set_out_pins(&c, pin_mosi, 1);
+    sm_config_set_sideset_pins(&c, pin_sck);
+    /* MSB first, auto-pull a fresh byte every 8 bits. */
+    sm_config_set_out_shift(&c, false, true, 8);
+    sm_config_set_fifo_join(&c, PIO_FIFO_JOIN_TX);
+
+    /* Two SM cycles per bit. */
+    float div = (float)clock_get_hz(clk_sys) / (freq_hz * 2.0f);
+    if (div < 1.0f) div = 1.0f;
+    sm_config_set_clkdiv(&c, div);
+
+    pio_sm_init(pio, sm, offset, &c);
+    pio_sm_set_enabled(pio, sm, true);
+}
+%}

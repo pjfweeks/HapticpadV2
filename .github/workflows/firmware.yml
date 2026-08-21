@@ -1,0 +1,36 @@
+name: firmware
+
+on:
+  push:
+    paths: ['firmware/**', '.github/workflows/firmware.yml']
+  pull_request:
+    paths: ['firmware/**']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build gcc-arm-none-eabi \
+                                  libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib \
+                                  libusb-1.0-0-dev
+
+      - name: Pico SDK
+        run: |
+          git clone --branch 2.1.1 --depth 1 https://github.com/raspberrypi/pico-sdk.git "$HOME/pico-sdk"
+          git -C "$HOME/pico-sdk" submodule update --init --depth 1
+          echo "PICO_SDK_PATH=$HOME/pico-sdk" >> "$GITHUB_ENV"
+
+      - name: Build
+        run: |
+          cmake -S firmware -B firmware/build -G Ninja
+          cmake --build firmware/build
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hapticpad-uf2
+          path: firmware/build/hapticpad.uf2

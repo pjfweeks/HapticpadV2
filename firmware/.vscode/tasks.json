@@ -1,0 +1,33 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Configure",
+            "type": "shell",
+            "command": "cmake -S . -B build -G Ninja",
+            "options": { "env": { "PICO_SDK_PATH": "${env:HOME}/pico/pico-sdk" } },
+            "problemMatcher": []
+        },
+        {
+            "label": "Build",
+            "type": "shell",
+            "command": "cmake --build build",
+            "group": { "kind": "build", "isDefault": true },
+            "options": { "env": { "PICO_SDK_PATH": "${env:HOME}/pico/pico-sdk" } },
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "Clean rebuild",
+            "type": "shell",
+            "command": "rm -rf build && cmake -S . -B build -G Ninja && cmake --build build",
+            "options": { "env": { "PICO_SDK_PATH": "${env:HOME}/pico/pico-sdk" } },
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "Open the configurator",
+            "type": "shell",
+            "command": "python3 ../configurator/hapticpad.py",
+            "problemMatcher": []
+        }
+    ]
+}

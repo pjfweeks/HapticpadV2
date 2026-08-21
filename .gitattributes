@@ -1,0 +1,18 @@
+* text=auto eol=lf
+
+*.uf2  binary
+*.bin  binary
+*.png  binary
+*.STL  binary
+*.stl  binary
+*.STEP binary
+*.step binary
+*.3mf  binary
+*.pdf  binary
+*.zip  binary
+*.xlsx binary
+*.numbers binary
+
+# keep GitHub's language stats about the firmware and the app
+assets/**  linguist-vendored
+hardware/** linguist-vendored

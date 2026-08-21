@@ -1,0 +1,11 @@
+# Both are optional - the configurator runs without either.
+#
+#   pyserial : required on Windows; on macOS and Linux the app opens the
+#              serial device directly through termios.
+#   Pillow   : adds JPEG/GIF/TIFF support to the icon importer; PNG and BMP
+#              work without it.
+#
+# Install with:  python3 -m pip install --user -r requirements.txt
+
+pyserial>=3.5
+Pillow>=9.0

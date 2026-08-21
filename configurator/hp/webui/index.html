@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HapticPad Configurator</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<script>window.HP_TOKEN = "__TOKEN__";</script>
+
+<header class="topbar">
+  <span class="brand">HapticPad</span>
+  <select id="port-select" aria-label="Serial port"></select>
+  <button id="btn-refresh-ports" class="ghost">Refresh</button>
+  <button id="btn-connect" class="primary">Connect</button>
+  <span id="device-label" class="device muted">not connected</span>
+</header>
+
+<nav class="tabs" role="tablist">
+  <button class="tab active" data-tab="profiles" role="tab">Profiles</button>
+  <button class="tab" data-tab="settings" role="tab">Device settings</button>
+  <button class="tab" data-tab="icons" role="tab">Icons</button>
+  <button class="tab" data-tab="monitor" role="tab">Monitor</button>
+</nav>
+
+<main>
+  <!-- ---------------------------------------------------------------- -->
+  <section id="panel-profiles" class="panel active">
+    <aside class="sidebar">
+      <h2>On the card</h2>
+      <ul id="profile-list" class="list"></ul>
+      <div class="button-row">
+        <button id="btn-profile-new" class="ghost">New</button>
+        <button id="btn-profile-copy" class="ghost">Duplicate</button>
+      </div>
+      <div class="button-row">
+        <button id="btn-profile-delete" class="ghost danger">Delete</button>
+        <button id="btn-profile-reload" class="ghost">Reload</button>
+      </div>
+      <button id="btn-profile-activate" class="wide">Activate on pad</button>
+    </aside>
+
+    <div class="editor">
+      <fieldset>
+        <legend>Profile</legend>
+        <div class="grid">
+          <label>File name<input id="p-filename" type="text" placeholder="excel.txt"></label>
+          <label>Name on screen<input id="p-name" type="text" maxlength="19"></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>LED ring</legend>
+        <div class="led-row">
+          <canvas id="led-ring" width="120" height="120"
+                  aria-label="Ring colour preview"></canvas>
+          <div class="led-fields">
+            <div class="grid">
+              <label>Mode<select id="p-led-mode"></select></label>
+              <label>Brightness
+                <span class="with-button">
+                  <input id="p-led-brightness" type="number" min="0" max="255"
+                         placeholder="device setting">
+                  <button class="ghost small" data-clear="p-led-brightness"
+                          title="Follow the device setting">Clear</button>
+                </span>
+              </label>
+            </div>
+            <div class="grid">
+              <label>Primary colour
+                <span class="colour-field">
+                  <input id="p-led-primary" type="text" placeholder="device setting">
+                  <input id="p-led-primary-picker" type="color" value="#00ff00"
+                         aria-label="Pick the primary colour">
+                  <button class="ghost small" data-clear="p-led-primary"
+                          title="Follow the device setting">Clear</button>
+                </span>
+              </label>
+              <label>Secondary colour
+                <span class="colour-field">
+                  <input id="p-led-secondary" type="text" placeholder="device setting">
+                  <input id="p-led-secondary-picker" type="color" value="#0000ff"
+                         aria-label="Pick the secondary colour">
+                  <button class="ghost small" data-clear="p-led-secondary"
+                          title="Follow the device setting">Clear</button>
+                </span>
+              </label>
+            </div>
+            <p id="led-help" class="muted small"></p>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Wheel</legend>
+        <div class="grid">
+          <label>Feel<select id="p-wheel"></select></label>
+          <label>Detents per turn<input id="p-detents" type="number" min="2" max="100" step="1"></label>
+          <label>Force <small>0 = use device setting</small>
+            <input id="p-strength" type="number" min="0" max="5" step="0.2"></label>
+        </div>
+        <label class="full">Turning does<select id="p-wheel-func"></select></label>
+        <p id="wheel-help" class="muted"></p>
+        <div class="grid">
+          <label>Clockwise
+            <span class="with-button">
+              <input id="p-cw" type="text" placeholder="inherited from the preset">
+              <button class="ghost small" data-test="p-cw">Test</button>
+            </span>
+          </label>
+          <label>Anticlockwise
+            <span class="with-button">
+              <input id="p-ccw" type="text" placeholder="inherited from the preset">
+              <button class="ghost small" data-test="p-ccw">Test</button>
+            </span>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Buttons</legend>
+        <div id="button-grid" class="button-grid"></div>
+      </fieldset>
+    </div>
+
+    <aside class="preview-pane">
+      <h2>Screen preview</h2>
+      <canvas id="oled" width="384" height="192"></canvas>
+      <p class="muted small">Exactly what the pad will draw, same font and layout.</p>
+      <button id="btn-profile-save" class="wide primary">Save to pad</button>
+      <button id="btn-profile-save-activate" class="wide">Save and activate</button>
+    </aside>
+  </section>
+
+  <!-- ---------------------------------------------------------------- -->
+  <section id="panel-settings" class="panel">
+    <div class="settings-columns">
+      <fieldset>
+        <legend>LED ring</legend>
+        <div id="settings-led"></div>
+      </fieldset>
+      <fieldset>
+        <legend>Wheel</legend>
+        <div id="settings-wheel"></div>
+      </fieldset>
+      <fieldset>
+        <legend>Display</legend>
+        <div id="settings-display"></div>
+      </fieldset>
+      <fieldset>
+        <legend>System</legend>
+        <div id="settings-system"></div>
+      </fieldset>
+    </div>
+    <div class="button-row wide-row">
+      <button id="btn-settings-read" class="ghost">Read from pad</button>
+      <button id="btn-settings-apply" class="ghost">Apply all</button>
+      <button id="btn-settings-save" class="primary">Save to card</button>
+      <span class="spacer"></span>
+      <button id="btn-reboot" class="ghost">Restart pad</button>
+      <button id="btn-bootsel" class="ghost danger">Firmware update mode</button>
+    </div>
+  </section>
+
+  <!-- ---------------------------------------------------------------- -->
+  <section id="panel-icons" class="panel">
+    <aside class="sidebar">
+      <h2>On the card</h2>
+      <ul id="icon-list" class="list"></ul>
+      <div class="button-row">
+        <button id="btn-icons-reload" class="ghost">Reload</button>
+        <button id="btn-icon-delete" class="ghost danger">Delete</button>
+      </div>
+    </aside>
+
+    <div class="editor">
+      <fieldset>
+        <legend>Preview</legend>
+        <div class="icon-preview-row">
+          <canvas id="icon-canvas" width="192" height="192"></canvas>
+          <p id="icon-info" class="muted"></p>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Import an image</legend>
+        <label class="full">Image file
+          <input id="icon-file" type="file" accept="image/png,image/bmp,image/*"></label>
+        <div class="grid">
+          <label>Interpretation<select id="icon-mode"></select></label>
+          <label>Threshold <span id="icon-threshold-value" class="muted"></span>
+            <input id="icon-threshold" type="range" min="1" max="254" value="128"></label>
+          <label>Save as<input id="icon-name" type="text" placeholder="save.bin"></label>
+        </div>
+        <button id="btn-icon-upload" class="primary">Upload to pad</button>
+        <p class="muted small">
+          <strong>auto</strong> works out whether the shape is the opaque part of the
+          image or a dark glyph on a light background. Most icon packs are the former;
+          getting it wrong is what produced the blank icons on the original card.
+        </p>
+      </fieldset>
+    </div>
+  </section>
+
+  <!-- ---------------------------------------------------------------- -->
+  <section id="panel-monitor" class="panel">
+    <div class="monitor-columns">
+      <fieldset>
+        <legend>Live status</legend>
+        <table id="status-table"></table>
+      </fieldset>
+      <fieldset class="log-box">
+        <legend>Device log</legend>
+        <pre id="log"></pre>
+        <div class="button-row">
+          <input id="raw-command" type="text" placeholder="STATUS, INFO, SET led_brightness 200, TEST CTRL+C">
+          <button id="btn-raw-send" class="ghost">Send</button>
+          <button id="btn-log-clear" class="ghost">Clear</button>
+        </div>
+      </fieldset>
+    </div>
+  </section>
+</main>
+
+<footer id="statusbar">Ready</footer>
+
+<!-- Step editor -->
+<div id="modal" class="modal-backdrop hidden">
+  <div class="modal">
+    <h2 id="modal-title">Steps</h2>
+    <p class="muted">
+      Steps run in order. The delay applies <em>after</em> the step, which is how
+      you wait for a dialog to open before pressing Enter.
+    </p>
+    <table class="steps">
+      <thead><tr><th>Action</th><th>Delay (ms)</th><th></th></tr></thead>
+      <tbody id="step-rows"></tbody>
+    </table>
+    <div class="button-row">
+      <select id="step-category"></select>
+      <select id="step-action"></select>
+      <button id="btn-step-add" class="ghost">Add step</button>
+    </div>
+    <div class="button-row right">
+      <button id="btn-step-cancel" class="ghost">Cancel</button>
+      <button id="btn-step-ok" class="primary">Done</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

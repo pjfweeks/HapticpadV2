@@ -1,0 +1,29 @@
+# build output
+build/
+firmware/build/
+*.elf
+*.map
+*.dis
+*.hex
+
+# the release binary in firmware/release/ is committed on purpose
+*.uf2
+!firmware/release/*.uf2
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+
+# editors and os
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+
+# kicad
+*-backups/
+*.kicad_prl
+*.lck
+fp-info-cache
+*.bak

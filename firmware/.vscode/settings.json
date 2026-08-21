@@ -1,0 +1,13 @@
+{
+    "cmake.configureOnOpen": true,
+    "cmake.generator": "Ninja",
+    "cmake.configureSettings": {
+        "PICO_SDK_PATH": "${env:HOME}/pico/pico-sdk",
+        "PICO_TOOLCHAIN_PATH": "${env:HOME}/pico/arm-gnu-toolchain-14.2.rel1-darwin-arm64-arm-none-eabi"
+    },
+    "C_Cpp.default.compilerPath": "${env:HOME}/pico/arm-gnu-toolchain-14.2.rel1-darwin-arm64-arm-none-eabi/bin/arm-none-eabi-gcc",
+    "files.associations": {
+        "*.pio": "asm-collection"
+    },
+    "editor.rulers": [88]
+}

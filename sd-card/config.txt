@@ -1,0 +1,24 @@
+# HapticPad configuration
+# Written by the firmware; safe to edit by hand or from the configurator.
+# Full reference: docs/configuration.md
+
+# --- display ---
+contrast=223
+display_flip=1
+screensaver_sec=120
+
+# --- LED ring ---
+# led_mode: off solid rainbow breath bands halo reactive profile
+led_mode=rainbow
+led_brightness=128
+led_primary=#00FF00
+led_secondary=#0000FF
+
+# --- haptics ---
+haptic_strength=1.00
+haptic_detents=24
+encoder_invert=0
+
+# --- system ---
+log_level=info
+last_profile=/profiles/excel.txt

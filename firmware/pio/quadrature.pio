@@ -1,0 +1,56 @@
+; quadrature.pio - full x4 quadrature decoder, entirely in PIO.
+;
+; The Arduino firmware decoded the encoder with two GPIO interrupts.  At 1024
+; PPR that is up to ~80 000 interrupts per second stealing time from the FOC
+; loop, and any missed edge silently corrupts the angle.  Here a state machine
+; samples both phases continuously and maintains the count in X; a DMA channel
+; copies that count into RAM, so reading the encoder costs one memory load and
+; the CPU never sees an interrupt.
+;
+; State is encoded as (A << 1) | B.  The dispatch table occupies addresses
+; 0..15 and is indexed by (previous_state << 2) | new_state, which is why the
+; program must be loaded at offset 0.
+
+.program quadrature
+.origin 0
+
+; ---- dispatch table -------------------------------------------------------
+; Clockwise (A leads B) walks 00 -> 10 -> 11 -> 01 -> 00.
+    jmp read        ; 0000  no movement
+    jmp minus       ; 0001  00 -> 01
+    jmp plus        ; 0010  00 -> 10
+    jmp read        ; 0011  illegal: a step was missed
+    jmp plus        ; 0100  01 -> 00
+    jmp read        ; 0101  no movement
+    jmp read        ; 0110  illegal
+    jmp minus       ; 0111  01 -> 11
+    jmp minus       ; 1000  10 -> 00
+    jmp read        ; 1001  illegal
+    jmp read        ; 1010  no movement
+    jmp plus        ; 1011  10 -> 11
+    jmp read        ; 1100  illegal
+    jmp plus        ; 1101  11 -> 01
+    jmp minus       ; 1110  11 -> 10
+    jmp read        ; 1111  no movement
+
+; ---- counter updates ------------------------------------------------------
+plus:
+    mov x, ~x                 ; X++ via two's complement: ~(~X - 1) == X + 1
+    jmp x--, plus_done
+plus_done:
+    mov x, ~x
+    jmp read
+
+minus:
+    jmp x--, read             ; decrements unconditionally; 0 wraps to -1
+    jmp read
+
+; ---- sample and dispatch --------------------------------------------------
+read:
+    mov isr, x                ; publish the current count...
+    push noblock              ; ...to the RX FIFO, drained by DMA
+    mov isr, null             ; clear ISR and its shift counter
+    in y, 2                   ; low 2 bits of Y hold the previous state
+    in pins, 2                ; append the freshly sampled state
+    mov y, isr                ; Y's low 2 bits are now the new state
+    mov pc, isr               ; dispatch on (prev << 2) | new
