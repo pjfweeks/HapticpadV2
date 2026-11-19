@@ -227,7 +227,7 @@ static void draw_profile(void) {
 
     if (hp_profile_count() == 0) {
         hp_gfx_text_centered(64, 26, "No profiles on card", 1, HP_INK_ON);
-        hp_gfx_text_centered(64, 40, "Add files to /profiles", 1, HP_INK_ON);
+        hp_gfx_text_centered(64, 40, "Add files: /profiles", 1, HP_INK_ON);
         return;
     }
 

@@ -99,6 +99,13 @@ them as surface-mount pads.
 The controller board has a group of pads labelled **Display**. Solder the cable
 that came with your screen straight to them; the labels match the display's.
 
+**Power the display from 3.3 V, not 5 V.** The Waveshare module accepts either,
+but its TXS0108E level shifter references its input threshold to VCC. At 5 V
+that threshold sits at about the RP2040's 3.3 V output, so clock edges are
+missed at random: the screen stays black on some boots, shows only garbled
+fragments on others, and gets worse while the motor and LEDs are drawing
+current. At 3.3 V the same signals clear the threshold comfortably.
+
 The two boards join with wires, label to label. Messy compared with a ribbon
 cable, deliberately, to keep the build approachable.
 

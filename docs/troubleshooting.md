@@ -64,6 +64,17 @@ Set `encoder_invert=1` in `config.txt`, or flip it in the menu.
 - `STATUS`'s FOC rate should be around 6.8 kHz with the motor live. Much lower
   means core 1 is being starved; open an issue with what you changed.
 
+## The screen is black or garbled, but the LEDs work
+
+- Check the display's VCC: it must be **3.3 V**, not 5 V. At 5 V its level
+  shifter barely registers the RP2040's 3.3 V signals, which gives a black
+  screen on some boots and drifting, slanted fragments of text on others. See
+  [hardware.md](hardware.md#connecting-the-two-boards).
+- `STATUS` reporting `screen 1` only means the firmware is drawing; the display
+  link is one-way, so the firmware cannot tell whether the panel received it.
+- Check continuity with the power off. Measured powered, the meter can report
+  connections between pins that are not really there.
+
 ## The screen is upside down, or too dim
 
 `display_flip` and `contrast` in `config.txt`, or the menu.

@@ -10,6 +10,19 @@
   toolchain, and the Pico SDK. It also patches SDK 2.1.1's `pioasm`, which
   does not compile on GCC 15+ without `<cstdint>`.
 
+### Fixed
+
+- **Display chip select released early.** The driver waited a fixed 3 µs
+  after the TX FIFO drained before moving CS or DC, which only covers the last
+  byte at 8 MHz, and the end-of-frame release did not wait at all, so the last
+  byte of each frame could be cut off. Both now wait one byte time at the
+  configured clock, which is a new setting, `HP_DISP_SPI_HZ` in `board.h`
+  (default 8 MHz, unchanged).
+- **"Add files to /profiles" was clipped.** At 132 px it was wider than the
+  128 px panel; it now reads "Add files: /profiles".
+- **Documented the display's 3.3 V supply.** A 5 V supply makes the module's
+  level shifter miss clock edges, giving a black or garbled screen.
+
 ## 2.0.0
 
 A complete firmware rewrite, from an Arduino sketch to C/C++ on the Raspberry

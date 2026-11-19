@@ -21,12 +21,19 @@ extern "C" {
 /* GP28 (clock) and GP22 (data) are NOT a valid hardware-SPI pin pair on the
  * RP2040, which is why the Arduino firmware fell back to bit-banged software
  * SPI and spent tens of milliseconds per frame.  We drive them from PIO
- * instead: same pins, ~8 MHz, DMA-fed, zero CPU time per frame.            */
+ * instead: same pins, DMA-fed, zero CPU time per frame.                  */
 #define HP_DISP_SCK   28
 #define HP_DISP_MOSI  22
 #define HP_DISP_CS     6
 #define HP_DISP_DC     7
 #define HP_DISP_RST    8
+
+/* Display SPI clock.  8 MHz is inside the SSD1309's 10 MHz limit and moves a
+ * 1 KiB frame in about 1 ms.  Lower it if a long or noisy display cable needs
+ * the margin; the CS/DC timing in ssd1309.c follows this value.  A black or
+ * garbled panel is far more often the module powered from 5 V instead of
+ * 3.3 V - see docs/hardware.md. */
+#define HP_DISP_SPI_HZ 8000000u
 
 #define HP_DISP_W    128
 #define HP_DISP_H     64

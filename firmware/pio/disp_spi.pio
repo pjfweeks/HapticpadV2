@@ -3,8 +3,8 @@
 ; GP28 (clock) and GP22 (data) are not a legal hardware-SPI pin pair on the
 ; RP2040, which forced the Arduino firmware into U8g2's software SPI: roughly
 ; 30 ms of bit-banging per full frame, on the same core as the button scan.
-; PIO drives the identical pins at 8 MHz and, fed by DMA, costs the CPU
-; nothing beyond kicking off the transfer (~1 ms per frame, in background).
+; PIO drives the identical pins at HP_DISP_SPI_HZ (board.h) and, fed by DMA,
+; costs the CPU nothing beyond kicking off the transfer.
 ;
 ; Mode 0: data changes on the falling edge, sampled on the rising edge.
 

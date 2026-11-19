@@ -19,12 +19,14 @@ static bool s_flipped = HP_DISP_FLIP;
 
 /* --- low level ---------------------------------------------------------- */
 
-/* The PIO keeps shifting for a few cycles after the FIFO drains, so CS and DC
- * must not move until the shift register is empty too. */
+/* Time to shift one byte out, rounded up, plus a small margin. */
+#define DISP_BYTE_US ((8u * 1000000u + HP_DISP_SPI_HZ - 1u) / HP_DISP_SPI_HZ + 2u)
+
+/* The PIO keeps shifting for up to one byte time after the FIFO drains, so CS
+ * and DC must not move until the shift register is empty too. */
 static void wait_idle(void) {
     while (!pio_sm_is_tx_fifo_empty(HP_PIO_DISP, HP_PIO_DISP_SM)) tight_loop_contents();
-    /* One byte at 8 MHz takes 1 us; 3 us is a comfortable margin. */
-    busy_wait_us(3);
+    busy_wait_us(DISP_BYTE_US);
 }
 
 static void send_bytes(const uint8_t *data, size_t len, bool is_data) {
@@ -60,7 +62,7 @@ void hp_disp_init(void) {
 
     s_offset = pio_add_program(HP_PIO_DISP, &disp_spi_program);
     disp_spi_program_init(HP_PIO_DISP, HP_PIO_DISP_SM, s_offset,
-                          HP_DISP_MOSI, HP_DISP_SCK, 8000000.0f);
+                          HP_DISP_MOSI, HP_DISP_SCK, (float)HP_DISP_SPI_HZ);
 
     /* Reset pulse: the SSD1309 needs the line low for at least 3 us. */
     gpio_put(HP_DISP_RST, 0);
@@ -102,8 +104,9 @@ void hp_disp_init(void) {
                           (uint8_t *)&HP_PIO_DISP->txf[HP_PIO_DISP_SM] + 3,
                           NULL, HP_FB_BYTES, false);
 
-    HP_LOGI(TAG, "SSD1309 up: PIO SPI 8 MHz on GP%d/GP%d, DMA ch%d, flip=%d",
-            HP_DISP_SCK, HP_DISP_MOSI, s_dma, (int)s_flipped);
+    HP_LOGI(TAG, "SSD1309 up: PIO SPI %u kHz on GP%d/GP%d, DMA ch%d, flip=%d",
+            (unsigned)(HP_DISP_SPI_HZ / 1000u), HP_DISP_SCK, HP_DISP_MOSI, s_dma,
+            (int)s_flipped);
 }
 
 /* Chip select is released here rather than in an interrupt: the frame is
@@ -111,7 +114,12 @@ void hp_disp_init(void) {
  * keeps the whole display path free of shared-state hazards. */
 void hp_disp_task(void) {
     if (s_dma < 0) return;
-    if (!gpio_get(HP_DISP_CS) && !hp_disp_busy()) gpio_put(HP_DISP_CS, 1);
+    if (!gpio_get(HP_DISP_CS) && !hp_disp_busy()) {
+        /* FIFO empty is not enough: the last byte is still in the shift
+         * register.  Releasing CS now would cut it off. */
+        wait_idle();
+        gpio_put(HP_DISP_CS, 1);
+    }
 }
 
 bool hp_disp_busy(void) {
