@@ -26,6 +26,11 @@ Two optional packages, neither required:
 python3 -m pip install --user -r requirements.txt
 ```
 
+On Arch, recent Debian/Ubuntu and Fedora, `pip install --user` is refused
+("externally-managed-environment"); use the distro package instead, e.g.
+`sudo pacman -S python-pillow python-pyserial` on Arch or
+`sudo apt install python3-pil python3-serial` on Debian/Ubuntu.
+
 - **pyserial** — needed on Windows. On macOS and Linux the app opens the
   serial device directly.
 - **Pillow** — lets the icon importer read JPEG and GIF. PNG and BMP work

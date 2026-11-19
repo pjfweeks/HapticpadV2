@@ -72,14 +72,20 @@ Set `encoder_invert=1` in `config.txt`, or flip it in the menu.
 
 - Only one program can hold the serial port. Close any `screen` session first.
 - On Windows, install pyserial: `python3 -m pip install --user pyserial`.
-- On Linux, add yourself to the `dialout` group and log back in.
+- On Linux, add yourself to the serial-port group and log back in: `dialout`
+  on Debian, Ubuntu and Fedora, `uucp` on Arch.
 - `python3 configurator/selftest.py` checks everything that does not need
   hardware, which separates an app problem from a connection problem.
 
 ## The firmware will not build
 
-- Run `firmware/tools/setup_macos.sh` — it installs CMake, Ninja, the ARM
+- Run `firmware/tools/setup_macos.sh` (macOS) or
+  `firmware/tools/setup_linux.sh` (Linux) — it installs CMake, Ninja, the ARM
   toolchain and the Pico SDK under `~/pico` without Homebrew or a password.
+- On Linux, if `pip` fails with "externally-managed-environment", you are
+  running an old copy of the setup instructions; `setup_linux.sh` installs
+  into a venv instead. On Debian/Ubuntu, `python3 -m venv` also needs the
+  `python3-venv` package.
 - `source ~/pico/pico-env.sh` in every new shell.
 - After changing branches or the SDK, delete `firmware/build/` and configure
   again.

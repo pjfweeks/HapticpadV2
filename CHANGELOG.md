@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- **Linux toolchain setup.** `firmware/tools/setup_linux.sh` does what
+  `setup_macos.sh` does on x86_64 and aarch64 Linux, without root: system
+  CMake/Ninja if present (else a venv, sidestepping PEP 668), the Linux ARM
+  toolchain, and the Pico SDK. It also patches SDK 2.1.1's `pioasm`, which
+  does not compile on GCC 15+ without `<cstdint>`.
+
 ## 2.0.0
 
 A complete firmware rewrite, from an Arduino sketch to C/C++ on the Raspberry

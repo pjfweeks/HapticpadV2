@@ -71,8 +71,14 @@ One-time setup — installs CMake, Ninja, the ARM toolchain and the Pico SDK
 under `~/pico`, with no Homebrew and no administrator password:
 
 ```bash
-./tools/setup_macos.sh
+./tools/setup_macos.sh   # macOS
+./tools/setup_linux.sh   # Linux (x86_64 or aarch64)
 ```
+
+On Linux, first install `git`, `curl`, `xz`, `python3` and a C/C++ compiler
+from your package manager; the script lists anything missing and how to get
+it. It uses the system CMake and Ninja if present, otherwise it installs them
+into a private venv under `~/pico`. No root needed.
 
 Then, in every new shell:
 

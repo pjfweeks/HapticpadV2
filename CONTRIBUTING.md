@@ -20,7 +20,8 @@ out not to be bugs.
 
 ## Working on the firmware
 
-Set the toolchain up once with `firmware/tools/setup_macos.sh`, then
+Set the toolchain up once with `firmware/tools/setup_macos.sh` (macOS) or
+`firmware/tools/setup_linux.sh` (Linux), then
 
 ```bash
 source ~/pico/pico-env.sh

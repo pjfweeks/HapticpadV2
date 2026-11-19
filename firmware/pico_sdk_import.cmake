@@ -13,7 +13,8 @@ endif ()
 
 if (NOT PICO_SDK_PATH)
     message(FATAL_ERROR
-        "Pico SDK not found.  Run tools/setup_macos.sh, then "
+        "Pico SDK not found.  Run tools/setup_macos.sh (macOS) or "
+        "tools/setup_linux.sh (Linux), then "
         "'source ~/pico/pico-env.sh' before configuring.")
 endif ()
 
